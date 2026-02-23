@@ -9,6 +9,8 @@ void main() {
   runApp(const MyApp());
 }
 
+final ThemeColorProvider themeColorProvider = ThemeColorProvider();
+
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
@@ -23,29 +25,40 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: appTheme,
-      home: Scaffold(
-        body: _pages[_currentIndex],
+    return ListenableBuilder(
+      listenable: themeColorProvider,
+      builder: (context, child) {
+        final theme = themeColorProvider.currentThemeColor;
 
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _currentIndex,
-          onTap: (index) {
-            setState(() {
-              _currentIndex = index;
-            });
-          },
-          selectedItemColor: currentThemeColor.color,
-          items: [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Downloads'),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.search),
-              label: 'Settings',
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: appTheme,
+          home: Scaffold(
+            body: _pages[_currentIndex],
+
+            bottomNavigationBar: BottomNavigationBar(
+              currentIndex: _currentIndex,
+              onTap: (index) {
+                setState(() {
+                  _currentIndex = index;
+                });
+              },
+              selectedItemColor: theme.color,
+              
+              items: [
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.home),
+                  label: 'Downloads',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.search),
+                  label: 'Settings',
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }
