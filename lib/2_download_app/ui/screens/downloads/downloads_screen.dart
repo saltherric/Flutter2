@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter2/2_download_app/ui/screens/downloads/widgets/download_tile.dart';
 import '../../theme/theme.dart';
-import '../../../main.dart'; 
+import '../../../main.dart';
 import 'widgets/download_controler.dart';
 
 class DownloadsScreen extends StatelessWidget {
@@ -33,11 +34,19 @@ class DownloadsScreen extends StatelessWidget {
               const SizedBox(height: 16),
               Text(
                 "Downloads",
-                style: AppTextStyles.heading.copyWith(
-                  color: theme.color, 
+                style: AppTextStyles.heading.copyWith(color: theme.color),
+              ),
+              const SizedBox(height: 20),
+
+              Expanded(
+                child: ListView.builder(
+                  itemCount: controllers.length,
+                  itemBuilder: (context, index) {
+                    return DownloadTile(controller: controllers[index]);
+                  },
                 ),
               ),
-            ]
+            ],
           ),
         );
       },
