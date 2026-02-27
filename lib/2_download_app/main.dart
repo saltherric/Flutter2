@@ -9,8 +9,6 @@ void main() {
   runApp(const MyApp());
 }
 
-final ThemeColorProvider themeColorProvider = ThemeColorProvider();
-
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 

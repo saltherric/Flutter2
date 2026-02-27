@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter2/2_download_app/ui/screens/downloads/widgets/download_tile.dart';
 import '../../theme/theme.dart';
-import '../../../main.dart';
 import 'widgets/download_controler.dart';
+import '../../providers/theme_color_provider.dart';
 
 class DownloadsScreen extends StatelessWidget {
   final List<Ressource> ressources = [

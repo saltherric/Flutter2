@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../../providers/theme_color_provider.dart';
 import '../../theme/theme.dart';
 import 'widget/theme_color_button.dart';
-import '../../../main.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
