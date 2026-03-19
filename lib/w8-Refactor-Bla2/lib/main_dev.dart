@@ -1,26 +1,39 @@
-// import 'package:provider/provider.dart';
-// import 'main_common.dart';
+import 'package:flutter2/w8-Refactor-Bla2/lib/data/respositories/location/locations_repository.dart';
+import 'package:flutter2/w8-Refactor-Bla2/lib/data/respositories/location/locations_repository_mock.dart';
+import 'package:flutter2/w8-Refactor-Bla2/lib/data/respositories/ride/rides_repository.dart';
+import 'package:flutter2/w8-Refactor-Bla2/lib/data/respositories/ride/rides_repository_mock.dart';
+import 'package:flutter2/w8-Refactor-Bla2/lib/data/respositories/ride_preference/ride_preference_repository.dart';
+import 'package:flutter2/w8-Refactor-Bla2/lib/data/respositories/ride_preference/ride_preference_repository_mock.dart';
+import 'package:flutter2/w8-Refactor-Bla2/lib/data/respositories/user/user_repository_mock.dart';
+import 'package:flutter2/w8-Refactor-Bla2/lib/main_common.dart';
+import 'package:flutter2/w8-Refactor-Bla2/lib/ui/state/ride_pref_state.dart';
+import 'package:provider/provider.dart';
 
+List<InheritedProvider> get devProviders {
+  final locationsRepository = LocationsRepositoryMock();
+  final userRepository = UserRepositoryMock();
 
-// /// Configure provider dependencies for dev environment
-// List<InheritedProvider> get devProviders {
-//   final locationRepository = loca();
+  final ridePreferenceRepository = RidePreferenceRepositoryMock(
+    locationsRepositoryMock: locationsRepository,
+  );
 
-//   return [
- 
-//     // 1 - Inject the song repository
-//     Provider<SongRepository>(create: (_) => SongRepositoryMock()),
+  final ridesRepository = RidesRepositoryMock(
+    locationsRepositoryMock: locationsRepository,
+    userRepositoryMock: userRepository,
+  );
 
-//     // 2 - Inject the player state
-//     ChangeNotifierProvider<PlayerState>(create: (_) => PlayerState()),
+  return [
+    Provider<LocationsRepository>.value(value: locationsRepository),
+    Provider<RidePreferenceRepository>.value(value: ridePreferenceRepository),
+    Provider<RidesRepository>.value(value: ridesRepository),
+    ChangeNotifierProvider<RidePreferenceState>(
+      create: (_) => RidePreferenceState(
+        ridePreferenceRepository: ridePreferenceRepository,
+      ),
+    ),
+  ];
+}
 
-//     // 3 - Inject the  app setting state
-//     ChangeNotifierProvider<AppSettingsState>(
-//       create: (_) => AppSettingsState(repository: appSettingsRepository),
-//     ),
-//   ];
-// }
-
-// void main() {
-//   mainCommon(devProviders);
-// }
+void main() {
+  mainCommon(devProviders);
+}
