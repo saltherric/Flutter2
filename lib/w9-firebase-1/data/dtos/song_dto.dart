@@ -1,4 +1,4 @@
-    import '../../model/songs/song.dart';
+  import '../../model/songs/song.dart';
 
 class SongDto {
   static const String titleKey = 'title';
@@ -15,8 +15,8 @@ class SongDto {
     return Song(
       id: id,
       title: json[titleKey],
-      artistId: json[artistIdKey], 
-      duration: Duration(milliseconds: json[durationKey]), 
+      artistId: json[artistIdKey],
+      duration: Duration(milliseconds: json[durationKey]),
       imageUrl: Uri.parse(json[imageUrlKey]),
     );
   }
