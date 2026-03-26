@@ -1,10 +1,12 @@
+import 'package:flutter2/w8-Refactor-Bla2/lib/data/respositories/location/locations_repository.dart';
+import 'package:provider/provider.dart';
+
 import '../buttons/bla_button.dart';
 import '../display/bla_divider.dart';
 import 'package:flutter/material.dart';
 
 import '../../../model/ride/locations.dart';
 import '../../../model/ride_pref/ride_pref.dart';
-import '../../../services/ride_prefs_service.dart';
 import '../../../utils/animations_util.dart';
 import '../../../utils/date_time_utils.dart';
 import '../../theme/theme.dart';
@@ -21,7 +23,7 @@ import 'bla_seat_picker.dart';
 ///
 class BlaRidePreferencePicker extends StatefulWidget {
   final RidePreference? initRidePreference; // optional initial preference.
-
+  
   const BlaRidePreferencePicker({
     super.key,
     this.initRidePreference,
@@ -40,7 +42,7 @@ class _BlaRidePreferencePickerState extends State<BlaRidePreferencePicker> {
   late DateTime departureDate;
   Location? arrival;
   late int requestedSeats;
-
+  static final int maxAllowedSeats = 8;
   // ----------------------------------
   // Initialize the Form attributes
   // ----------------------------------
@@ -80,7 +82,7 @@ class _BlaRidePreferencePickerState extends State<BlaRidePreferencePicker> {
     // 1- Select a location
     Location? selectedLocation = await Navigator.of(context).push<Location>(
       AnimationUtils.createBottomToTopRoute(
-        BlaLocationPicker(initLocation: departure),
+        BlaLocationPicker(initLocation: departure, locationsRepository: context.read<LocationsRepository>()),
       ),
     );
 
@@ -96,7 +98,7 @@ class _BlaRidePreferencePickerState extends State<BlaRidePreferencePicker> {
     // 1- Select a arrival
     Location? selectedLocation = await Navigator.of(context).push<Location>(
       AnimationUtils.createBottomToTopRoute(
-        BlaLocationPicker(initLocation: arrival),
+        BlaLocationPicker(initLocation: arrival, locationsRepository: context.read<LocationsRepository>()),
       ),
     );
 
@@ -114,7 +116,7 @@ class _BlaRidePreferencePickerState extends State<BlaRidePreferencePicker> {
       AnimationUtils.createRightToLeftRoute(
         BlaSeatPicker(
           initSeats: requestedSeats,
-          maxSeat: RidePrefsService.maxAllowedSeats,
+          maxSeat: maxAllowedSeats,
         ),
       ),
     );
