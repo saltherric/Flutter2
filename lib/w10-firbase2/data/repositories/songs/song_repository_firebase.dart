@@ -7,6 +7,8 @@ import '../../dtos/song_dto.dart';
 import 'song_repository.dart';
 
 class SongRepositoryFirebase extends SongRepository {
+  List<Song>? _cachedSongs;
+
   final Uri songsUri = Uri.https(
     'test-a2a77-default-rtdb.asia-southeast1.firebasedatabase.app',
     '/songs.json',
@@ -20,31 +22,45 @@ class SongRepositoryFirebase extends SongRepository {
   }
 
   @override
-  Future<List<Song>> fetchSongs() async {
+  Future<List<Song>> fetchSongs({bool forceFetch = false}) async {
+    // 1. Return cache if available
+    if (!forceFetch && _cachedSongs != null) {
+      return _cachedSongs!;
+    }
+
+    // 2. Otherwise fetch from API
+    List<Song> songs = await _fetchSongsFromApi();
+
+    // 3. Store in memory
+    _cachedSongs = songs;
+
+    return songs;
+  }
+
+  Future<List<Song>> _fetchSongsFromApi() async {
     final http.Response response = await http.get(songsUri);
 
-    if (response.statusCode == 200) {
-      if (response.body == 'null') {
-        return [];
-      }
-
-      // 1 - Read all songs from firebase
-      Map<String, dynamic> songJson = json.decode(response.body);
-
-      List<Song> result = [];
-      for (final entry in songJson.entries) {
-        try {
-          Map<String, dynamic> data = Map<String, dynamic>.from(entry.value);
-          result.add(SongDto.fromJson(entry.key, data));
-        } catch (_) {
-          // Skip invalid song record
-        }
-      }
-      return result;
-    } else {
-      // 2- Throw expcetion if any issue
+    if (response.statusCode != 200) {
       throw Exception('Failed to load songs');
     }
+
+    if (response.body == 'null') {
+      return [];
+    }
+
+    Map<String, dynamic> songJson = json.decode(response.body);
+
+    List<Song> result = [];
+    for (final entry in songJson.entries) {
+      try {
+        Map<String, dynamic> data = Map<String, dynamic>.from(entry.value);
+        result.add(SongDto.fromJson(entry.key, data));
+      } catch (_) {
+        // Skip invalid song record
+      }
+    }
+
+    return result;
   }
 
   @override
@@ -62,6 +78,23 @@ class SongRepositoryFirebase extends SongRepository {
 
     if (response.statusCode < 200 || response.statusCode >= 300) {
       throw Exception('Failed to like song');
+    }
+
+    if (_cachedSongs != null) {
+      for (int i = 0; i < _cachedSongs!.length; i++) {
+        Song song = _cachedSongs![i];
+        if (song.id == songId) {
+          _cachedSongs![i] = Song(
+            id: song.id,
+            title: song.title,
+            artistId: song.artistId,
+            duration: song.duration,
+            imageUrl: song.imageUrl,
+            likes: song.likes + 1,
+          );
+          break;
+        }
+      }
     }
   }
 }
