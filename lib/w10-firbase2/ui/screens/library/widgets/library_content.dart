@@ -14,16 +14,30 @@ class LibraryContent extends StatelessWidget {
     // 1- Read the globbal song repository
     LibraryViewModel mv = context.watch<LibraryViewModel>();
 
+    if (mv.likeErrorMessage != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(mv.likeErrorMessage!)));
+        mv.clearLikeError();
+      });
+    }
+
     AsyncValue<List<LibraryItemData>> asyncValue = mv.data;
 
     Widget content;
     switch (asyncValue.state) {
-      
       case AsyncValueState.loading:
         content = Center(child: CircularProgressIndicator());
         break;
       case AsyncValueState.error:
-        content = Center(child: Text('error = ${asyncValue.error!}', style: TextStyle(color: Colors.red),));
+        content = Center(
+          child: Text(
+            'error = ${asyncValue.error!}',
+            style: TextStyle(color: Colors.red),
+          ),
+        );
+        break;
 
       case AsyncValueState.success:
         List<LibraryItemData> data = asyncValue.data!;
@@ -34,6 +48,9 @@ class LibraryContent extends StatelessWidget {
             isPlaying: mv.isSongPlaying(data[index].song),
             onTap: () {
               mv.start(data[index].song);
+            },
+            onLike: () {
+              mv.likeSong(data[index]);
             },
           ),
         );
