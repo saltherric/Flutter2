@@ -5,6 +5,7 @@ import '../../../../model/artist/artist.dart';
 import '../../../theme/theme.dart';
 import '../../../utils/async_value.dart';
 import '../../../widgets/song/artist_tile.dart';
+import '../artist_screen.dart';
 import '../view_model/artists_view_model.dart';
 
 class ArtistsContent extends StatelessWidget {
@@ -39,7 +40,17 @@ class ArtistsContent extends StatelessWidget {
           },
           child: ListView.builder(
             itemCount: artists.length,
-            itemBuilder: (context, index) => ArtistTile(artist: artists[index]),
+            itemBuilder: (context, index) => ArtistTile(
+              artist: artists[index],
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ArtistScreen(artist: artists[index]),
+                  ),
+                );
+              },
+            ),
           ),
         );
     }
@@ -50,7 +61,7 @@ class ArtistsContent extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(height: 16),
-          Text("Library", style: AppTextStyles.heading),
+          Text("Artists", style: AppTextStyles.heading),
           SizedBox(height: 50),
 
           Expanded(child: content),

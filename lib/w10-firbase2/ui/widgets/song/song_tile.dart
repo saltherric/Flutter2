@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import '../../../model/artist/artist.dart';
 
-class ArtistTile extends StatelessWidget {
-  const ArtistTile({super.key, required this.artist, this.onTap});
+import '../../../model/songs/song.dart';
 
-  final Artist artist;
-  final VoidCallback? onTap;
+class SongTile extends StatelessWidget {
+  const SongTile({super.key, required this.song});
+
+  final Song song;
 
   @override
   Widget build(BuildContext context) {
@@ -17,11 +17,12 @@ class ArtistTile extends StatelessWidget {
           borderRadius: BorderRadius.circular(15),
         ),
         child: ListTile(
-          onTap: onTap,
-          title: Text(artist.name),
-          subtitle: Text("Genre: ${artist.genre}"),
           leading: CircleAvatar(
-            backgroundImage: NetworkImage(artist.imageUrl.toString()),
+            backgroundImage: NetworkImage(song.imageUrl.toString()),
+          ),
+          title: Text(song.title),
+          subtitle: Text(
+            '${song.duration.inMinutes} mins  •  ${song.likes} likes',
           ),
         ),
       ),

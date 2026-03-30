@@ -76,5 +76,19 @@
       "imageUrl": "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=300&h=300&fit=crop&q=80",
       "likes": 4
     }
+  },
+  "comments": {
+    "artist_1": {
+      "c_1": {
+        "message": "Love this artist style!",
+        "createdAt": "2026-03-30T10:00:00.000Z"
+      }
+    },
+    "artist_2": {
+      "c_1": {
+        "message": "Great songs for relaxing.",
+        "createdAt": "2026-03-30T10:10:00.000Z"
+      }
+    }
   }
 }
